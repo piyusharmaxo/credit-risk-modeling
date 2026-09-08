@@ -4,7 +4,7 @@
 
 An end-to-end credit-risk modeling project focused on predicting loan default, evaluating model discrimination and probability quality, and translating predicted risk into portfolio-level credit-risk segmentation and decision analysis.
 
-The project follows a structured credit-risk workflow covering data understanding, exploratory analysis, structural preprocessing, machine-learning pipelines, baseline modeling, feature engineering, advanced model development, threshold optimization, explainability, and risk segmentation.
+The project follows a structured credit-risk workflow covering data understanding, exploratory analysis, structural preprocessing, machine-learning pipelines, baseline modeling, feature engineering, advanced model development, threshold optimization, explainability, risk segmentation, and model governance.
 
 ---
 
@@ -55,7 +55,7 @@ The project uses the **Home Credit Default Risk** dataset, an applicant-level hi
 
 `SK_ID_CURR` is retained for record identification but excluded from the machine-learning feature matrix.
 
-### Major variable groups
+### Major Variable Groups
 
 - Demographic characteristics
 - Income and employment
@@ -66,7 +66,50 @@ The project uses the **Home Credit Default Risk** dataset, an applicant-level hi
 - Household and social characteristics
 - Application-process variables
 
-The raw dataset is intentionally excluded from version control.
+The raw and processed datasets are intentionally excluded from version control.
+
+---
+
+## Data and Reproducibility
+
+The project uses the Home Credit Default Risk dataset. The dataset itself is not included in the repository because of its size and licensing/distribution considerations.
+
+The expected local data structure is:
+
+```text
+data/
+├── raw/
+│   ├── application_train.csv
+│   └── application_test.csv
+└── processed/
+    └── application_train_structural_cleaned.csv
+```
+
+Notebook 03 generates the structurally cleaned training dataset:
+
+```text
+data/processed/application_train_structural_cleaned.csv
+```
+
+### Execution Order
+
+The notebooks are designed as a sequential analytical workflow:
+
+1. `01_Data_Understanding.ipynb`
+2. `02_EDA.ipynb`
+3. `03_Data_Preprocessing.ipynb`
+4. `04_Machine_Learning_Pipeline.ipynb`
+5. `05_Baseline_Credit_Risk_Modeling.ipynb`
+6. `06_Feature_Engineering.ipynb`
+7. `07_Advanced_Credit_Risk_Model_Development.ipynb`
+
+The train-test split uses stratification with `random_state=42` for reproducibility.
+
+Preprocessing transformations are fitted using training data within the machine-learning pipeline to reduce the risk of information leakage.
+
+Raw and processed datasets are excluded from Git version control through `.gitignore`.
+
+Python dependencies are pinned in `requirements.txt`.
 
 ---
 
@@ -76,7 +119,7 @@ The project follows the workflow:
 
 **Data Understanding → EDA → Structural Preprocessing → ML Pipeline → Baseline Modeling → Feature Engineering → Advanced Model Development → Decision Analysis → Explainability → Risk Segmentation → Model Governance**
 
-### Data preparation
+### Data Preparation
 
 - Dataset structure and variable types examined
 - Target distribution assessed
@@ -86,7 +129,7 @@ The project follows the workflow:
 - 105 columns retained after structural cleaning
 - Imputation and categorical encoding deferred to the modeling pipeline
 
-### Machine-learning pipeline
+### Machine-Learning Pipeline
 
 A reproducible preprocessing pipeline is implemented using:
 
@@ -179,7 +222,7 @@ Evaluation includes:
 
 The 0.50 classification threshold is treated as an analytical reference point rather than an operational credit-policy threshold.
 
-#### Baseline performance
+#### Baseline Performance
 
 | Model | ROC-AUC | PR-AUC |
 |---|---:|---:|
@@ -202,7 +245,7 @@ Introduces economically motivated applicant-level features:
 
 The analysis also explicitly handles the anomalous `DAYS_EMPLOYED == 365243` value rather than treating it as a genuine employment duration.
 
-#### Feature-engineered benchmark
+#### Feature-Engineered Benchmark
 
 | Model | ROC-AUC | PR-AUC |
 |---|---:|---:|
@@ -212,7 +255,7 @@ The improvement is modest but demonstrates the value of economically motivated f
 
 ---
 
-### 07 — Advanced Credit Risk Model Development
+## 07 — Advanced Credit Risk Model Development
 
 `notebooks/07_Advanced_Credit_Risk_Model_Development.ipynb`
 
@@ -224,7 +267,7 @@ Model families considered include:
 - Random Forest
 - Histogram-based Gradient Boosting
 
-The final Gradient Boosting specification is selected using validation performance, with **PR-AUC as the primary model-selection metric** because default is a relatively rare outcome.
+The final **Histogram-based Gradient Boosting** specification is selected using validation performance, with **PR-AUC as the primary model-selection metric** because default is a relatively rare outcome.
 
 Hyperparameter optimization is performed using validation data.
 
@@ -232,13 +275,13 @@ The held-out test set remains untouched during model selection and threshold sel
 
 ---
 
-## Final Model
+# Final Model
 
 ### Histogram-based Gradient Boosting
 
 The final model is a Histogram-based Gradient Boosting classifier.
 
-### Final test-set performance
+### Final Test-Set Performance
 
 | Metric | Result |
 |---|---:|
@@ -253,13 +296,13 @@ The final model improves upon the feature-engineered Logistic Regression benchma
 |---|---:|---:|
 | Baseline Logistic Regression | 0.7482 | 0.2283 |
 | Feature-engineered Logistic Regression | 0.7492 | 0.2313 |
-| **Final Histogram Gradient Boosting** | **0.7603** | **0.2495** |
+| **Final Histogram-based Gradient Boosting** | **0.7603** | **0.2495** |
 
 This progression demonstrates the incremental development from an interpretable baseline toward a more flexible nonlinear model.
 
 ---
 
-## Credit Decision Threshold Analysis
+# Credit Decision Threshold Analysis
 
 The model produces a continuous probability of default. Converting this probability into a binary credit-risk flag requires a decision threshold.
 
@@ -273,7 +316,7 @@ from
 
 Threshold selection is therefore performed using validation data rather than the final test set.
 
-### Validation-derived F1 threshold
+### Validation-Derived F1 Threshold
 
 The validation F1-optimal threshold is:
 
@@ -292,7 +335,7 @@ The threshold is not presented as a universal lending cutoff. An operational thr
 
 ---
 
-## Cost-Sensitive Decision Analysis
+# Cost-Sensitive Decision Analysis
 
 A credit-risk system does not necessarily treat false positives and false negatives as equally costly.
 
@@ -312,9 +355,9 @@ This reinforces the distinction between **predictive modeling** and **credit-pol
 
 ---
 
-## Model Explainability
+# Model Explainability
 
-The final Gradient Boosting model is analyzed using model-agnostic explainability techniques.
+The final Histogram-based Gradient Boosting model is analyzed using model-agnostic explainability techniques.
 
 ### Permutation Importance
 
@@ -339,13 +382,13 @@ Partial dependence analysis is used to examine directional model relationships f
 Examples include:
 
 - an inverse relationship between `EXT_SOURCE_2` and model-estimated default probability;
-- a positive nonlinear relationship between `LOAN_GOODS_RATIO` and predicted default probability.
+- a positive nonlinear relationship between `LOAN_GOODS_RATIO` and model-estimated default probability.
 
 These relationships describe the behavior of the fitted model and should not be interpreted as causal effects.
 
 ---
 
-## Portfolio Risk Segmentation
+# Portfolio Risk Segmentation
 
 The final model's predicted probabilities are used to construct validation-derived risk bands.
 
@@ -359,7 +402,7 @@ For each risk segment, the analysis evaluates:
 - default lift;
 - proportion of observed defaults captured.
 
-### Three-band analytical segmentation
+### Three-Band Analytical Segmentation
 
 For portfolio interpretation, the resulting risk distribution is summarized into Low, Medium, and High Risk groups.
 
@@ -367,16 +410,17 @@ For portfolio interpretation, the resulting risk distribution is summarized into
 |---|---:|---:|---:|---:|
 | Low Risk | ~50.2% | 2.83% | — | — |
 | Medium Risk | ~30.5% | 8.21% | — | — |
-| **High Risk** | **19.39%** | **21.41%** | **2.65×** | **51.44%**|
+| **High Risk** | **19.39%** | **21.41%** | **2.65×** | **51.44%** |
 
 The analytical High Risk segment contains approximately one-fifth of applicants while capturing more than half of observed defaults.
+
 This demonstrates meaningful portfolio-level risk stratification.
 
 The segmentation is an analytical evaluation framework and should not be interpreted as a regulatory or institution-specific credit-grade system.
 
 ---
 
-## Kolmogorov–Smirnov Analysis
+# Kolmogorov–Smirnov Analysis
 
 The Kolmogorov–Smirnov statistic is included as an additional ranking diagnostic commonly used in credit-scoring applications.
 
@@ -392,7 +436,7 @@ KS is treated as a discrimination diagnostic and is not used to determine the op
 
 ---
 
-## Probability Quality
+# Probability Quality
 
 Discrimination metrics alone do not establish whether predicted probabilities correspond to observed default frequencies.
 
@@ -409,29 +453,42 @@ These diagnostics are used for final model assessment and do not inform model se
 
 ---
 
-## Model Governance and Limitations
+# Key Findings
+
+The project produces several findings relevant to credit-risk decision-making:
+
+- The final Histogram-based Gradient Boosting model achieved a test **ROC-AUC of 0.7603** and **PR-AUC of 0.2495**, improving upon both Logistic Regression benchmarks.
+- The final model achieved a test **KS statistic of 0.3880** and **Brier Score of 0.067563**, providing complementary evidence on ranking discrimination and probability quality.
+- At the validation-derived threshold of **0.16**, the model identified **38.67% of observed defaults** while flagging **12.21% of applicants**.
+- Portfolio segmentation showed meaningful risk concentration: the highest-risk **19.39% of applicants** contained **51.44% of observed defaults**, with a **21.41% observed default rate** and **2.65× portfolio lift**.
+- Cost-sensitive analysis demonstrated that credit-policy thresholds involve an explicit trade-off between missed defaults, unnecessary interventions, recall, precision, and flagged population size.
+- The model is therefore particularly useful for **risk ranking and portfolio segmentation**. An operational lending threshold would require institution-specific loss assumptions, policy constraints, independent validation, fairness assessment, and governance.
+
+---
+
+# Model Governance and Limitations
 
 The model is intended as a research and analytical credit-risk model rather than a production-ready lending decision system.
 
 Important limitations include:
 
-### Data and population limitations
+### Data and Population Limitations
 
 Performance reflects the historical applicant population and lending process represented in the development dataset. Generalization to materially different populations, products, economic environments, or underwriting policies is not guaranteed.
 
-### Selection considerations
+### Selection Considerations
 
 Observed default outcomes reflect historical lending and application processes. Selection effects may therefore influence the modeling population.
 
-### Feature limitations
+### Feature Limitations
 
 External credit-quality variables contain substantial predictive information, but their underlying construction and data-generating processes are external to this project.
 
-### Predictive versus causal interpretation
+### Predictive versus Causal Interpretation
 
 Model coefficients, feature importance, and partial-dependence relationships describe predictive associations and model behavior. They do not establish causal effects.
 
-### Threshold and policy limitations
+### Threshold and Policy Limitations
 
 Predicted probability and credit-decision threshold are separate components of the risk-management framework.
 
@@ -444,7 +501,7 @@ An operational threshold should reflect:
 - operational capacity;
 - underwriting policy.
 
-### Fairness and governance
+### Fairness and Governance
 
 Demographic or potentially sensitive characteristics require additional governance and fairness review before operational deployment.
 
@@ -462,13 +519,13 @@ A production implementation would require ongoing monitoring of:
 - default rates;
 - segment-level performance.
 
-### Production deployment
+### Production Deployment
 
 Before operational use, the model would require independent validation, documented data lineage, governance approval, fairness assessment, monitoring procedures, and institution-specific credit-policy design.
 
 ---
 
-## Final Model Card
+# Final Model Card
 
 | Component | Final Specification |
 |---|---|
@@ -495,7 +552,7 @@ Before operational use, the model would require independent validation, document
 
 ---
 
-## Repository Structure
+# Repository Structure
 
 ```text
 credit-risk-modeling/
@@ -504,11 +561,20 @@ credit-risk-modeling/
 ├── requirements.txt
 ├── .gitignore
 │
-└── notebooks/
-    ├── 01_Data_Understanding.ipynb
-    ├── 02_EDA.ipynb
-    ├── 03_Data_Preprocessing.ipynb
-    ├── 04_Machine_Learning_Pipeline.ipynb
-    ├── 05_Baseline_Credit_Risk_Modeling.ipynb
-    ├── 06_Feature_Engineering.ipynb
-    └── 07_Advanced_Credit_Risk_Model_Development.ipynb
+├── data/
+│   ├── raw/                  # excluded from Git
+│   └── processed/            # excluded from Git
+│
+├── notebooks/
+│   ├── 01_Data_Understanding.ipynb
+│   ├── 02_EDA.ipynb
+│   ├── 03_Data_Preprocessing.ipynb
+│   ├── 04_Machine_Learning_Pipeline.ipynb
+│   ├── 05_Baseline_Credit_Risk_Modeling.ipynb
+│   ├── 06_Feature_Engineering.ipynb
+│   └── 07_Advanced_Credit_Risk_Model_Development.ipynb
+│
+├── models/                   # reserved for model artifacts
+├── reports/                  # reserved for analytical reports
+└── src/                      # reserved for reusable project code
+```
