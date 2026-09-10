@@ -48,8 +48,8 @@ The project uses the **Home Credit Default Risk** dataset, an applicant-level hi
 
 `TARGET`
 
-- `0` — applicant did not default
-- `1` — applicant defaulted
+- `0` - applicant did not default
+- `1` - applicant defaulted
 
 ### Identifier
 
@@ -146,7 +146,7 @@ An 80/20 stratified train-test split with a fixed random seed is used for reprod
 
 ## Project Stages
 
-### 01 — Data Understanding
+### 01 - Data Understanding
 
 `notebooks/01_Data_Understanding.ipynb`
 
@@ -161,7 +161,7 @@ Establishes the analytical structure of the dataset, including:
 
 ---
 
-### 02 — Exploratory Data Analysis
+### 02 - Exploratory Data Analysis
 
 `notebooks/02_EDA.ipynb`
 
@@ -178,7 +178,7 @@ The EDA establishes the empirical context for subsequent modeling decisions.
 
 ---
 
-### 03 — Data Preprocessing
+### 03 - Data Preprocessing
 
 `notebooks/03_Data_Preprocessing.ipynb`
 
@@ -193,7 +193,7 @@ Key steps include:
 
 ---
 
-### 04 — Machine Learning Pipeline
+### 04 - Machine Learning Pipeline
 
 `notebooks/04_Machine_Learning_Pipeline.ipynb`
 
@@ -203,7 +203,7 @@ The pipeline separates numerical and categorical transformations and ensures tha
 
 ---
 
-### 05 — Baseline Credit Risk Modeling
+### 05 - Baseline Credit Risk Modeling
 
 `notebooks/05_Baseline_Credit_Risk_Modeling.ipynb`
 
@@ -230,7 +230,7 @@ The 0.50 classification threshold is treated as an analytical reference point ra
 
 ---
 
-### 06 — Feature Engineering
+### 06 - Feature Engineering
 
 `notebooks/06_Feature_Engineering.ipynb`
 
@@ -255,7 +255,7 @@ The improvement is modest but demonstrates the value of economically motivated f
 
 ---
 
-## 07 — Advanced Credit Risk Model Development
+## 07 - Advanced Credit Risk Model Development
 
 `notebooks/07_Advanced_Credit_Risk_Model_Development.ipynb`
 
@@ -408,8 +408,8 @@ For portfolio interpretation, the resulting risk distribution is summarized into
 
 | Risk Segment | Population Share | Observed Default Rate | Portfolio Lift | Default Capture |
 |---|---:|---:|---:|---:|
-| Low Risk | ~50.2% | 2.83% | — | — |
-| Medium Risk | ~30.5% | 8.21% | — | — |
+| Low Risk | ~50.2% | 2.83% | - | - |
+| Medium Risk | ~30.5% | 8.21% | - | - |
 | **High Risk** | **19.39%** | **21.41%** | **2.65×** | **51.44%** |
 
 The analytical High Risk segment contains approximately one-fifth of applicants while capturing more than half of observed defaults.
@@ -545,8 +545,8 @@ Before operational use, the model would require independent validation, document
 | Test Recall at 0.16 | 38.67% |
 | Test F1 at 0.16 | 30.79% |
 | Test Flagged Rate at 0.16 | 12.21% |
-| Highest-risk risk-band default rate | 21.41% |
-| Highest-risk risk-band lift | 2.65× |
+| High-risk band default rate | 21.41% |
+| High-risk band lift | 2.65× |
 | High-risk Population Share | 19.39% |
 | High-risk Default Capture | 51.44% |
 
